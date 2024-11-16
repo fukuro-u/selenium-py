@@ -15,17 +15,18 @@ RUN dpkg -i /tmp/chromium.deb || apt-get install -f -y
 #     unzip /tmp/driver.zip -d /usr/local/bin/ && \
 #     chmod +x /usr/local/bin/chromedriver
 
-COPY requirements.txt /app/requirements.txt
+COPY . /app
+# COPY requirements.txt /app/requirements.txt
 WORKDIR /app
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . /app
+# COPY . /app
 
 ENV PATH="/usr/lib/chromium-browser/:${PATH}"
 ENV CHROME_BIN="/usr/bin/chromium"
 # ENV CHROMEDRIVER_PATH=/usr/local/bin/chromedriver
 
-RUN pip install gunicorn
+# RUN pip install gunicorn
 
 EXPOSE 5000
 
