@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: selenium-api  # Tên dịch vụ bạn muốn triển khai
+    env: python  # Môi trường Python
+    plan: free  # Mức tài nguyên (có thể thay đổi thành 'starter' hoặc 'pro' nếu cần)
+    buildCommand: |
+      apt-get update && apt-get install -y libnss3 libgdk-pixbuf2.0-0 fonts-liberation  # Cài đặt các gói phụ thuộc cho Selenium và Chrome
+      pip install -r requirements.txt  # Cài đặt các thư viện Python
+    startCommand: python api/main.py  # Lệnh để chạy ứng dụng Flask
+
+    # Tùy chọn môi trường biến (envVars) nếu cần
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "true"  # Đảm bảo ứng dụng không buffer output (đặc biệt cho log trong ứng dụng Flask)
