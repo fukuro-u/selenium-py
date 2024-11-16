@@ -32,9 +32,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # COPY . /app
 
 # ENV PATH="/usr/lib/chromium-browser/:${PATH}"
-# ENV CHROME_BIN="/usr/bin/chromium"
+ENV CHROME_BIN="/usr/bin/chromium"
 # ENV CHROME_BIN=/usr/bin/google-chrome-stable
 # ENV CHROMEDRIVER_PATH=/usr/local/bin/chromedriver
+ENV CHROMEDRIVER_PATH=/usr/lib/chromium-browser/chromedriver
 
 # RUN pip install gunicorn
 
