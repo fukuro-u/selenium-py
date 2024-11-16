@@ -42,4 +42,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 10000
 
 # CMD ["gunicorn", "-b", "0.0.0.0:${PORT}", "main:app"]
-CMD gunicorn -b 0.0.0.0:$PORT --workers 3 main:app
+CMD gunicorn -b 0.0.0.0:$PORT --workers 2 main:app
