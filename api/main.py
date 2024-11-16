@@ -1,54 +1,93 @@
 from flask import Flask, request, jsonify
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 import time
 
 app = Flask(__name__)
 
 @app.route('/use-cookie', methods=['POST'])
 def use_cookie():
-    # Nhận cookie từ request
-    cookies = request.json.get("cookies", [])
-    
-    if not cookies:
-        return jsonify({"error": "Cookies không hợp lệ!"}), 400
 
-    # Thiết lập các options cho chế độ headless
+    cookies = request.json.get("cookies", "")
+    user_agent = request.json.get("user_agent", "")
+    imei = request.json.get("imei", "")
+
+    if not cookies or not user_agent or not imei:
+        return jsonify({"error": "Cookies, User-Agent and IMEI is required!"}), 400
+
+    
     options = Options()
-    options.add_argument("--headless")  # Chạy ở chế độ không hiển thị UI
+    options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
-    options.add_argument("--disable-gpu")  # Cần thiết cho headless trên Linux
+    options.add_argument("--disable-gpu")
+    options.add_argument(f"user-agent={user_agent}")
     
-    # Khởi tạo trình duyệt Chrome với Selenium
-    driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=options)
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=options)
     
-    # Truy cập vào Zalo Web (hoặc trang web cần tự động hóa)
     driver.get('https://chat.zalo.me/')
     
-    # Thêm cookie vào trình duyệt
-    for cookie in cookies:
-        driver.add_cookie({"name": cookie["name"], "value": cookie["value"]})
+    cookie_dict = cookies.split(';')
+    for cookie in cookie_dict:
+        cookie_name_value = cookie.strip().split('=')
+        if len(cookie_name_value) == 2:
+            driver.add_cookie({"name": cookie_name_value[0], "value": cookie_name_value[1]})
 
-    # Tải lại trang để xác nhận cookie đã được thêm vào
+    # driver.execute_cdp_cmd('Network.setExtraHTTPHeaders', {
+    #     'headers': {
+    #         'imei': imei
+    #     }
+    # })
+
+    driver.execute_script(f"localStorage.setItem('z_uuid', '{imei}');")
+
+
     driver.refresh()
 
-    # Chờ vài giây để trang tải xong
-    time.sleep(5)
+    time.sleep(8)
 
-    # Chụp ảnh màn hình để kiểm tra kết quả (hoặc thực hiện tác vụ khác)
-    screenshot = driver.get_screenshot_as_base64()  # Ảnh chụp màn hình dưới dạng base64
+    screenshot = driver.get_screenshot_as_base64()
 
-    # Đóng trình duyệt
     driver.quit()
 
-    # Trả về kết quả, ví dụ là ảnh chụp màn hình
     return jsonify({
-        "message": "Tác vụ hoàn tất.",
+        "message": "Successfully!",
         "screenshot": screenshot
     })
 
+@app.route('/', methods=['GET'])
+def home():
+    
+    url = request.args.get('url', 'https://www.google.com')
+
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=options)
+
+    driver.get(url)
+
+    time.sleep(5)
+
+    screenshot = driver.get_screenshot_as_base64()
+
+    driver.quit()
+
+    return f'''
+        <html>
+            <body>
+                <h1>Google Screenshot</h1>
+                <img src="data:image/png;base64,{screenshot}" alt=" Screenshot"/>
+            </body>
+        </html>
+    '''
 
 if __name__ == "__main__":
     app.run(debug=True)
