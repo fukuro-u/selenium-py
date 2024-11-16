@@ -66,26 +66,25 @@ def index():
     
     driver.get(url)
     
-    # page_html = driver.page_source
-    time.sleep(5)
+    page_html = driver.page_source
 
-    screenshot = driver.get_screenshot_as_base64()
+    # screenshot = driver.get_screenshot_as_base64()
 
-    html = f"""<!DOCTYPE html>
-    <html>
-    <head>
-        <title>Screenshot</title>
-    </head>
-    <body>
-        <img src="data:image/png;base64,{screenshot}" alt="Screenshot">
-    </body>
-    </html>"""
+    # html = f"""<!DOCTYPE html>
+    # <html>
+    # <head>
+    #     <title>Screenshot</title>
+    # </head>
+    # <body>
+    #     <img src="data:image/png;base64,{screenshot}" alt="Screenshot">
+    # </body>
+    # </html>"""
     
     driver.quit()
 
-    return html
+    # return html
     
-    # return page_html
+    return page_html
 
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=10000)
