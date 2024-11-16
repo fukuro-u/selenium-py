@@ -27,7 +27,7 @@ def use_cookie():
     service = Service(executable_path=chromedriver_path)
 
     
-    service = Service(/usr/bin/chromedriver)
+    service = Service('/usr/bin/chromedriver')
     driver = webdriver.Chrome(service=service, options=options)
     
     driver.get('https://chat.zalo.me/')
