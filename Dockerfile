@@ -12,7 +12,7 @@ RUN wget http://security.ubuntu.com/ubuntu/pool/universe/c/chromium-browser/chro
 RUN dpkg -i /tmp/chromium.deb || apt-get install -f -y
 
 RUN wget https://chromedriver.storage.googleapis.com/112.0.5615.49/chromedriver_linux64.zip -O /tmp/driver.zip && \
-    unzip /tmp/driver.zip -d /usr/local/bin/
+    unzip /tmp/driver.zip -d /usr/local/bin/ && \
     chmod +x /usr/local/bin/chromedriver
 
 COPY requirements.txt /app/requirements.txt
