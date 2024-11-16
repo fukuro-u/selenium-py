@@ -39,7 +39,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # RUN pip install gunicorn
 
-EXPOSE 100000
+EXPOSE 10000
 
 # CMD ["gunicorn", "-b", "0.0.0.0:${PORT}", "main:app"]
-CMD gunicorn -b 0.0.0.0:$PORT main:app
+CMD gunicorn -b 0.0.0.0:$PORT --workers 3 main:app
