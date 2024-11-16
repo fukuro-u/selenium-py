@@ -1,8 +1,8 @@
 FROM python:3.11-slim
 
-RUN echo "deb  http://deb.debian.org/debian  bullseye main contrib" > /etc/apt/sources.list \
-&& echo "deb  https://deb.debian.org/debian-security  bullseye-security main contrib" >> /etc/apt/sources.list \
-echo "deb [signed-by=/usr/share/keyrings/lil-archive-keyring.gpg]  https://repo.lil.tools/  bullseye-security updates/main" > /etc/apt/sources.list.d/lil-chromium.list
+RUN echo "deb http://deb.debian.org/debian bullseye main contrib" > /etc/apt/sources.list \
+    && echo "deb https://deb.debian.org/debian-security bullseye-security main contrib" >> /etc/apt/sources.list \
+    && echo "deb [signed-by=/usr/share/keyrings/lil-archive-keyring.gpg] https://repo.lil.tools/ bullseye-security updates/main" > /etc/apt/sources.list.d/lil-chromium.list
 
 RUN apt-get update && apt-get install -y \
     chromium=114.0.5735.197 \
