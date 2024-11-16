@@ -1,12 +1,5 @@
 FROM python:3.11-slim
 
-RUN dpkg -i /tmp/chromium.deb \
-    && apt-get install -f -y  # Cài đặt các dependencies còn thiếu
-
-    https://chromedriver.storage.googleapis.com/112.0.5615.49/chromedriver_linux64.zip
-
-RUN rm /tmp/chromium.deb
-
 RUN apt-get update && \
     apt-get install -y \
     wget \
