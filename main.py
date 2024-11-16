@@ -71,15 +71,15 @@ def index():
 
     screenshot = driver.get_screenshot_as_base64()
 
-     html = f"""<!DOCTYPE html>
-        <html>
-        <head>
-            <title>Screenshot</title>
-        </head>
-        <body>
-            <img src="data:image/png;base64,{screenshot}" alt="Screenshot">
-        </body>
-        </html>"""
+    html = f"""<!DOCTYPE html>
+    <html>
+    <head>
+        <title>Screenshot</title>
+    </head>
+    <body>
+        <img src="data:image/png;base64,{screenshot}" alt="Screenshot">
+    </body>
+    </html>"""
     
     driver.quit()
 
