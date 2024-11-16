@@ -1,14 +1,26 @@
 FROM python:3.11-slim
 
-RUN echo "deb http://deb.debian.org/debian bullseye main contrib" > /etc/apt/sources.list \
-    && echo "deb https://deb.debian.org/debian-security bullseye-security main contrib" >> /etc/apt/sources.list \
-    && echo "deb [signed-by=/usr/share/keyrings/lil-archive-keyring.gpg] https://repo.lil.tools/ bullseye-security updates/main" > /etc/apt/sources.list.d/lil-chromium.list
+RUN dpkg -i /tmp/chromium.deb \
+    && apt-get install -f -y  # Cài đặt các dependencies còn thiếu
 
-RUN apt-get update && apt-get install -y \
-    chromium=114.0.5735.197 \
-    chromium-driver \
+    https://chromedriver.storage.googleapis.com/112.0.5615.49/chromedriver_linux64.zip
+
+RUN rm /tmp/chromium.deb
+
+RUN apt-get update && \
+    apt-get install -y \
+    wget \
+    unzip \
+    dpkg \
     curl \
-    && rm -rf /var/lib/apt/lists/*
+    gnupg
+
+RUN wget http://security.ubuntu.com/ubuntu/pool/universe/c/chromium-browser/chromium-browser_112.0.5615.49-0ubuntu0.18.04.1_amd64.deb -O /tmp/chromium.deb
+RUN dpkg -i /tmp/chromium.deb || apt-get install -f -y
+
+RUN wget https://chromedriver.storage.googleapis.com/112.0.5615.49/chromedriver_linux64.zip -O /tmp/driver.zip && \
+    unzip /tmp/driver.zip -d /usr/local/bin/
+    chmod +x /usr/local/bin/chromedriver
 
 COPY requirements.txt /app/requirements.txt
 WORKDIR /app
@@ -16,8 +28,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . /app
 
-ENV PATH="/usr/lib/chromium-browser/:${PATH}"
 ENV CHROME_BIN="/usr/bin/chromium"
+ENV CHROMEDRIVER_PATH=/usr/local/bin/chromedriver
 
 RUN pip install gunicorn
 
