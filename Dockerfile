@@ -2,8 +2,8 @@ FROM python:3.11-slim
 # FROM selenium/standalone-chrome:114.0
 # FROM browserless/chrome:latest
 
-USER root
-RUN apt-get update && apt-get install -y python3 python3-pip
+# USER root
+# RUN apt-get update && apt-get install -y python3 python3-pip
 
 RUN apt-get update && \
     apt-get install -y \
@@ -13,7 +13,7 @@ RUN apt-get update && \
     curl \
     gnupg \
     chromium \
-    chromium-driver \
+    chromium-driver
 
 # RUN wget https://mirror.cs.uchicago.edu/google-chrome/pool/main/g/google-chrome-stable/google-chrome-stable_114.0.5735.90-1_amd64.deb -O /tmp/chrome.deb
 # RUN dpkg -i /tmp/chrome.deb || apt-get install -f -y
